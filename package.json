@@ -1,0 +1,26 @@
+{
+  "name": "har-utils",
+  "version": "0.0.4",
+  "description": "HAR file utilities",
+  "main": "index.js",
+  "bin": {
+    "harlog": "./bin/harlog",
+    "hawk": "./bin/hawk"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/w3dot0/node-har-utils.git"
+  },
+  "author": "Jens Schmidt",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/w3dot0/node-har-utils/issues"
+  },
+  "dependencies": {
+    "cli": "~0.6.3",
+    "async": "~0.9.0"
+  }
+}

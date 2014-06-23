@@ -1,0 +1,55 @@
+#!/usr/bin/env node
+
+var cli = require('cli').enable('glob'),
+  fs = require('fs'),
+  url = require('url'),
+  async = require('async'),
+  Har = require('../lib/har');
+
+cli.setUsage("harlog [OPTIONS] <file.har>");
+
+var options = cli.parse({
+  host: ['h', 'Host Filter (only include matching entries)', 'string', ''],
+  verbose: ['v', 'Produce more verbose output']
+});
+
+var verbose = options.verbose ? cli.info : function() {};
+
+var logHar = function(content) {
+  var har = new Har(content);
+  if (options.host) {
+    har.selectHost(options.host);
+  }
+  console.log(har.toLog().join('\n'));
+};
+
+var parseHarFile = function(file) {
+  return function(callback) {
+    verbose('Parsing ' + file);
+    fs.readFile(file, 'utf-8', function(err, content) {
+      if (err) {
+        callback(err);
+      }
+      try {
+        logHar(content);
+      } catch (e) {
+        callback(e);
+      }
+    });
+  };
+};
+
+if (cli.args.length > 0) {
+  verbose('Parsing ' + cli.args.length + ' files');
+  async.series(cli.args.map(parseHarFile), function(err) {
+    if (err) {
+      if (options.verbose) {
+        throw (err);
+      } else {
+        cli.error(err);
+      }
+    }
+  });
+} else {
+  cli.withStdin(logHar);
+}
