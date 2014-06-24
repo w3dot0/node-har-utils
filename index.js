@@ -1,4 +1,1 @@
-module.exports = {
-  awk: require('./lib/awk'),
-  log: require('./lib/log')
-};
+module.exports = require('./lib/har');

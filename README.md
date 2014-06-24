@@ -1,5 +1,5 @@
-node-har
-========
+node-har-utils
+==============
 
 Utilities for .har file manipulation.
 
@@ -10,10 +10,14 @@ Installation:
 Usage
 -----
 
-modify a har file
+```
+var Har = require('har-utils');
+```
+
+Modify a har file (content passed as `harString`)
 
 ```
-var har = new Har(fs.readFileSync(harFile, 'utf-8'))
+var har = new Har(harString)
   // filter hosts (regexp)
   .selectHost('mydomain\\.com')
   // replace cookie value
@@ -24,7 +28,7 @@ var har = new Har(fs.readFileSync(harFile, 'utf-8'))
   .toJSON();
 ```
 
-convert har file content to HTTP log entry
+Convert har file content to HTTP log entry
 
 ```
 var har = new Har(harString).toLog();
