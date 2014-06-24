@@ -6,10 +6,13 @@ var cli = require('cli').enable('glob'),
   async = require('async'),
   Har = require('../lib/har');
 
-cli.setUsage("harlog [OPTIONS] <file.har>");
+cli.setUsage('harlog [OPTIONS] <file.har>');
 
 var options = cli.parse({
   host: ['h', 'Host Filter (only include matching entries)', 'string', ''],
+  status: ['s', 'Status filter (error: 4xx or 5xx; success: 2xx: redirect:3xx)', 'string'],
+  min: ['', 'Minimum response time Filter', 'number'],
+  max: ['', 'Maximum response time Filter', 'number'],
   verbose: ['v', 'Produce more verbose output']
 });
 
@@ -19,6 +22,17 @@ var logHar = function(content) {
   var har = new Har(content);
   if (options.host) {
     har.selectHost(options.host);
+  }
+  if (options.min || options.max) {
+    har.selectResponseTime(options.min || 0, options.max || Infinity);
+  }
+  if (options.status) {
+    var range = {
+      success: /2\d\d/,
+      redirect: /3\d\d/,
+      error: /(4|5)\d\d/,
+    };
+    har.selectStatusCode(range[options.status] || /.*/);
   }
   console.log(har.toLog().join('\n'));
 };
