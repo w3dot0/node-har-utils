@@ -34,21 +34,24 @@ var logHar = function(content) {
     };
     har.selectStatusCode(range[options.status] || /.*/);
   }
-  console.log(har.toLog().join('\n'));
+  var log = har.toLog();
+  if (log.length > 0) {
+    console.log(log.join('\n'));
+  }
 };
 
 var parseHarFile = function(file) {
   return function(callback) {
     verbose('Parsing ' + file);
     fs.readFile(file, 'utf-8', function(err, content) {
-      if (err) {
-        callback(err);
+      if (!err) {
+        try {
+          logHar(content);
+        } catch (e) {
+          callback(e);
+        }
       }
-      try {
-        logHar(content);
-      } catch (e) {
-        callback(e);
-      }
+      callback(err);
     });
   };
 };
