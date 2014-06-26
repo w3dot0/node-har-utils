@@ -13,6 +13,7 @@ var options = cli.parse({
   status: ['s', 'Status filter (error: 4xx or 5xx; success: 2xx: redirect:3xx)', 'string'],
   min: ['', 'Minimum response time Filter', 'number'],
   max: ['', 'Maximum response time Filter', 'number'],
+  format: ['f', 'Output Format (text | json)', 'string', 'text'],
   verbose: ['v', 'Produce more verbose output']
 });
 
@@ -34,9 +35,13 @@ var logHar = function(content) {
     };
     har.selectStatusCode(range[options.status] || /.*/);
   }
-  var log = har.toLog();
-  if (log.length > 0) {
-    console.log(log.join('\n'));
+  var log = har.toLog(options.format);
+  if (options.format === 'json') {
+    console.log(JSON.stringify(log, null, '  '));
+  } else {
+    if (log.length > 0) {
+      console.log(log.join('\n'));
+    }
   }
 };
 

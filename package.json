@@ -1,6 +1,6 @@
 {
   "name": "har-utils",
-  "version": "0.0.7",
+  "version": "0.1.0",
   "description": "HAR file utilities",
   "main": "index.js",
   "bin": {
